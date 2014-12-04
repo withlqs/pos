@@ -14,6 +14,7 @@ var saveMoney = 0;
 
 function printInventory(inputs) {
 	setSources(inputs);
+
 	outputText += billHeader;
 	scanItems(inputs);
 	printMainBill();
@@ -33,36 +34,37 @@ function setSources(inputs) {
 	endMark = "**********************";
 	promotionSentence = "挥泪赠送商品：\n";
 	moneyUnit = "元";
-	convertToStandardSources(inputs);
+	convertToStandardSources();
 }
 
-function convertToStandardSources(inputs) {
+function convertToStandardSources() {
 	var allItems = loadAllItems();
-	for (var item in allItems) {
-		var detailOfItem = {
-			name: allItems[item].name,
-			unit: allItems[item].unit,
-			price: allItems[item].price
+
+	for (var itemIndex in allItems) {
+		standardItems[allItems[itemIndex].barcode] = {
+			name: allItems[itemIndex].name,
+			unit: allItems[itemIndex].unit,
+			price: allItems[itemIndex].price
 		};
-		standardItems[allItems[item].barcode] = detailOfItem;
 	}
 }
 
 function scanItems(inputs) {
-	var numberOfItem = "", barcodeOfItem = "";
-	for (var item in inputs) {
-		barcodeOfItem = inputs[item].split('-')[0];
-		numberOfItem = inputs[item].split('-')[1];
+	var itemNumberInString = "", itemBarcode = "", itemNumber;
 
-		var countOfItem = 1;
-		if (numberOfItem != null) {
-			countOfItem = parseInt(numberOfItem);
+	for (var itemIndex in inputs) {
+		itemBarcode = inputs[itemIndex].split('-')[0];
+		itemNumberInString = inputs[itemIndex].split('-')[1];
+
+		itemNumber = 1;
+		if (itemNumberInString != null) {
+			itemNumber = parseInt(itemNumberInString);
 		}
 
-		if (itemCount[barcodeOfItem] == null) {
-			itemCount[barcodeOfItem] = 0;
+		if (itemCount[itemBarcode] == null) {
+			itemCount[itemBarcode] = 0;
 		}
-		itemCount[barcodeOfItem] += countOfItem;
+		itemCount[itemBarcode] += itemNumber;
 	}
 }
 
@@ -79,26 +81,24 @@ function printMainBill() {
 	}
 }
 
-function getSumMoney(itemCode) {
+function getSumMoney(itemBarcode) {
 	var allPromotions = loadPromotions();
-	for (var promotion in allPromotions) {
-		switch (allPromotions[promotion].type) {
-			case "BUY_TWO_GET_ONE_FREE": return BUY_TWO_GET_ONE_FREE(allPromotions[promotion].barcodes, itemCode);
+	for (var promotionIndex in allPromotions) {
+		switch (allPromotions[promotionIndex].type) {
+			case "BUY_TWO_GET_ONE_FREE": return BUY_TWO_GET_ONE_FREE(allPromotions[promotionIndex].barcodes, itemBarcode);
 		}
 	}
-	return itemCount[itemCode]*(standardItems[itemCode].price);
+	return itemCount[itemBarcode]*(standardItems[itemBarcode].price);
 }
 
-function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemCode) {
-	//console.log(barcodeOfPromotions+"\n");
-	var nowItemCount = itemCount[itemCode];
-	var nowItemPrice = (standardItems[itemCode]).price;
+function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemBarcode) {
+	var nowItemCount = itemCount[itemBarcode];
+	var nowItemPrice = (standardItems[itemBarcode]).price;
 
-	for (var itemCodeSample in barcodeOfPromotions) {
-		if (barcodeOfPromotions[itemCodeSample] == itemCode && itemCount[itemCode] > 2) {
-			promotedItems[itemCode] = 1;
-			saveMoney += nowItemPrice*promotedItems[itemCode];
-			//console.log("#####hahahah\n");
+	for (var barcodeIndex in barcodeOfPromotions) {
+		if (barcodeOfPromotions[barcodeIndex] == itemBarcode && itemCount[itemBarcode] > 2) {
+			promotedItems[itemBarcode] = 1;
+			saveMoney += nowItemPrice*promotedItems[itemBarcode];
 
 			return (nowItemCount-1)*nowItemPrice;
 		}
@@ -108,8 +108,9 @@ function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemCode) {
 
 function printPromotion() {
 	outputText += promotionSentence;
-	for (var itemCode in promotedItems) {
-		outputText += "名称：" + standardItems[itemCode].name + "，数量：" + promotedItems[itemCode] + standardItems[itemCode].unit + "\n";
+	for (var itemBarcode in promotedItems) {
+		outputText += "名称：" + standardItems[itemBarcode].name + "，数量：" +
+					  promotedItems[itemBarcode] + standardItems[itemBarcode].unit + "\n";
 	}
 }
 
