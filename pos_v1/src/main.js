@@ -7,6 +7,8 @@ var marketName;
 var promotionSentence;
 var billHeader;
 var moneyUnit;
+var promotedItems = {};
+var standardItems = {};
 
 function printInventory(inputs) {
 	setSources();
@@ -78,7 +80,7 @@ function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemCode) {
 	var nowItemCount = itemCount[itemCode], nowItemPrice = standardItems[itemCode].price;
 	for (var itemCodeSample in barcodeOfPromotions) {
 		if (itemCodeSample === itemCode && itemCount[itemCode] > 2) {
-			
+			promotedItems[itemCode] = 1;
 			return (nowItemCount-1)*nowItemPrice;
 		}
 	}
@@ -87,8 +89,12 @@ function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemCode) {
 
 function printPromotion() {
 	outputText += promotionSentence;
-	for (var item in itemCount) {
-
+	for (var itemCode in promotedItems) {
+		outputText += "名称：" + standardItems[itemCode].name + "，数量：" + promotedItems[itemCode] + standardItems[itemCode].unit + "\n";
 	}
 }
-function printTotalCount() {}
+
+function printTotalCount() {
+	outputText += "总计：" + totalMoney + "(" + moneyUnit + ")";
+	outputText += "节省：" + saveMoney + "(" + moneyUnit + ")";
+}
