@@ -30,7 +30,7 @@ function setSources(inputs) {
 	marketName = "没钱赚商店";
 	billHeader = "***<"+marketName+">购物清单***\n"
 	listSeperator = "----------------------\n";
-	endMark = "**********************\n";
+	endMark = "**********************";
 	promotionSentence = "挥泪赠送商品：\n";
 	moneyUnit = "元";
 	convertToStandardSources(inputs);
@@ -74,8 +74,8 @@ function printMainBill() {
 		totalMoney += moneyOfItem;
 
 		outputText += "名称：" + standardItems[itemBarcode].name + "，数量：" + itemCount[itemBarcode] +
-					  standardItems[itemBarcode].unit + "，单价：" + standardItems[itemBarcode].price +
-					  "(" + moneyUnit + ")，小计：" + moneyOfItem + "(" + moneyUnit + ")\n";
+					  standardItems[itemBarcode].unit + "，单价：" + standardItems[itemBarcode].price.toFixed(2) +
+					  "(" + moneyUnit + ")，小计：" + moneyOfItem.toFixed(2) + "(" + moneyUnit + ")\n";
 	}
 }
 
@@ -83,13 +83,14 @@ function getSumMoney(itemCode) {
 	var allPromotions = loadPromotions();
 	for (var promotion in allPromotions) {
 		switch (allPromotions[promotion].type) {
-			case "BUY_TWO_GET_ONE_FREE": return BUY_TWO_GET_ONE_FREE(allPromotions[promotion].barcode, itemCode);
+			case "BUY_TWO_GET_ONE_FREE": return BUY_TWO_GET_ONE_FREE(allPromotions[promotion].barcodes, itemCode);
 		}
 	}
 	return itemCount[itemCode]*(standardItems[itemCode].price);
 }
 
 function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemCode) {
+	//console.log(barcodeOfPromotions+"\n");
 	var nowItemCount = itemCount[itemCode];
 	var nowItemPrice = (standardItems[itemCode]).price;
 
@@ -97,6 +98,7 @@ function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemCode) {
 		if (barcodeOfPromotions[itemCodeSample] == itemCode && itemCount[itemCode] > 2) {
 			promotedItems[itemCode] = 1;
 			saveMoney += nowItemPrice*promotedItems[itemCode];
+			//console.log("#####hahahah\n");
 
 			return (nowItemCount-1)*nowItemPrice;
 		}
@@ -112,6 +114,6 @@ function printPromotion() {
 }
 
 function printTotalCount() {
-	outputText += "总计：" + totalMoney + "(" + moneyUnit + ")\n";
-	outputText += "节省：" + saveMoney + "(" + moneyUnit + ")\n";
+	outputText += "总计：" + totalMoney.toFixed(2) + "(" + moneyUnit + ")\n";
+	outputText += "节省：" + saveMoney.toFixed(2) + "(" + moneyUnit + ")\n";
 }
