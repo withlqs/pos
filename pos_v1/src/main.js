@@ -55,12 +55,11 @@ function scanItems(inputs) {
 	for (var itemIndex in inputs) {
 		itemBarcode = inputs[itemIndex].split('-')[0];
 		itemNumberInString = inputs[itemIndex].split('-')[1];
-
 		itemNumber = 1;
+		
 		if (itemNumberInString != null) {
 			itemNumber = parseInt(itemNumberInString);
 		}
-
 		if (itemCount[itemBarcode] == null) {
 			itemCount[itemBarcode] = 0;
 		}
