@@ -1,5 +1,5 @@
 //TODO: Please write code in this file.
-var outputText;
+var outputText = "";
 var itemCount = {};
 var listSeperator;
 var endMark;
@@ -39,12 +39,12 @@ function setSources(inputs) {
 function convertToStandardSources(inputs) {
 	var allItems = loadAllItems();
 	for (var item in allItems) {
-		var detailOfItem = { ;
+		var detailOfItem = {
 			name: allItems[item].name,
 			unit: allItems[item].unit,
 			price: allItems[item].price
 		};
-		standardItems[item.barcode] = detailOfItem;
+		standardItems[allItems[item].barcode] = detailOfItem;
 	}
 }
 
@@ -54,10 +54,15 @@ function scanItems(inputs) {
 		barcodeOfItem = inputs[item].split('-')[0];
 		numberOfItem = inputs[item].split('-')[1];
 
-		itemCount[barcodeOfItem] = 1;
-		if (numberOfItem !== "") {
-			itemCount[barcodeOfItem] += parseInt(numberOfItem)-1;
+		var countOfItem = 1;
+		if (numberOfItem != null) {
+			countOfItem = parseInt(numberOfItem);
 		}
+
+		if (itemCount[barcodeOfItem] == null) {
+			itemCount[barcodeOfItem] = 0;
+		}
+		itemCount[barcodeOfItem] += countOfItem;
 	}
 }
 
@@ -89,7 +94,7 @@ function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemCode) {
 	var nowItemPrice = (standardItems[itemCode]).price;
 
 	for (var itemCodeSample in barcodeOfPromotions) {
-		if (barcodeOfPromotions[itemCodeSample] === itemCode && itemCount[itemCode] > 2) {
+		if (barcodeOfPromotions[itemCodeSample] == itemCode && itemCount[itemCode] > 2) {
 			promotedItems[itemCode] = 1;
 			saveMoney += nowItemPrice*promotedItems[itemCode];
 
@@ -107,6 +112,6 @@ function printPromotion() {
 }
 
 function printTotalCount() {
-	outputText += "总计：" + totalMoney + "(" + moneyUnit + ")";
-	outputText += "节省：" + saveMoney + "(" + moneyUnit + ")";
+	outputText += "总计：" + totalMoney + "(" + moneyUnit + ")\n";
+	outputText += "节省：" + saveMoney + "(" + moneyUnit + ")\n";
 }
