@@ -36,14 +36,14 @@ function setSources(inputs) {
 	convertToStandardSources(inputs);
 }
 
-function convertToStandarsSources(inputs) {
+function convertToStandardSources(inputs) {
 	var allItems = loadAllItems();
 	for (var item in allItems) {
 		standardItems[item.barcode] = {
 			name: item.name,
 			unit: item.unit,
 			price: item.price
-		}
+		};
 	}
 }
 
@@ -80,7 +80,7 @@ function getSumMoney(itemCode) {
 			case "BUY_TWO_GET_ONE_FREE": return BUY_TWO_GET_ONE_FREE(promotion.barcode, itemCode);
 		}
 	}
-	return itemCount[itemCode]*standardItems[itemCode].price;
+	return itemCount[itemCode]*standardItems[itemCode]["price"];
 }
 
 function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemCode) {
