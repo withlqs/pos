@@ -114,4 +114,4 @@ function printPromotion() {
 function printTotalCount() {
 	outputText += "总计：" + totalMoney.toFixed(2) + "(" + moneyUnit + ")\n";
 	outputText += "节省：" + saveMoney.toFixed(2) + "(" + moneyUnit + ")\n";
-}
+} 
