@@ -14,7 +14,6 @@ var saveMoney = 0;
 
 function printInventory(inputs) {
 	setSources(inputs);
-
 	outputText += billHeader;
 	scanItems(inputs);
 	printMainBill();
@@ -34,12 +33,11 @@ function setSources(inputs) {
 	endMark = "**********************";
 	promotionSentence = "挥泪赠送商品：\n";
 	moneyUnit = "元";
-	convertToStandardSources();
+	convertToStandardSources(inputs);
 }
 
-function convertToStandardSources() {
+function convertToStandardSources(inputs) {
 	var allItems = loadAllItems();
-
 	for (var itemIndex in allItems) {
 		standardItems[allItems[itemIndex].barcode] = {
 			name: allItems[itemIndex].name,
@@ -55,8 +53,8 @@ function scanItems(inputs) {
 	for (var itemIndex in inputs) {
 		itemBarcode = inputs[itemIndex].split('-')[0];
 		itemNumberInString = inputs[itemIndex].split('-')[1];
-		itemNumber = 1;
 
+		itemNumber = 1;
 		if (itemNumberInString != null) {
 			itemNumber = parseInt(itemNumberInString);
 		}
@@ -68,25 +66,23 @@ function scanItems(inputs) {
 }
 
 function printMainBill() {
-	var moneyOfItem;
+	var itemMoney;
 
 	for (var itemBarcode in itemCount) {
-		moneyOfItem = getSumMoney(itemBarcode);
-		totalMoney += moneyOfItem;
+		itemMoney = getSumMoney(itemBarcode);
+		totalMoney += itemMoney;
+
 		outputText += "名称：" + standardItems[itemBarcode].name + "，数量：" + itemCount[itemBarcode] +
 					  standardItems[itemBarcode].unit + "，单价：" + standardItems[itemBarcode].price.toFixed(2) +
-					  "(" + moneyUnit + ")，小计：" + moneyOfItem.toFixed(2) + "(" + moneyUnit + ")\n";
+					  "(" + moneyUnit + ")，小计：" + itemMoney.toFixed(2) + "(" + moneyUnit + ")\n";
 	}
 }
 
 function getSumMoney(itemBarcode) {
 	var allPromotions = loadPromotions();
-
 	for (var promotionIndex in allPromotions) {
 		switch (allPromotions[promotionIndex].type) {
-			case "BUY_TWO_GET_ONE_FREE": {
-				return BUY_TWO_GET_ONE_FREE(allPromotions[promotionIndex].barcodes, itemBarcode);
-			}
+			case "BUY_TWO_GET_ONE_FREE": return BUY_TWO_GET_ONE_FREE(allPromotions[promotionIndex].barcodes, itemBarcode);
 		}
 	}
 	return itemCount[itemBarcode]*(standardItems[itemBarcode].price);
@@ -96,8 +92,8 @@ function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemBarcode) {
 	var nowItemCount = itemCount[itemBarcode];
 	var nowItemPrice = (standardItems[itemBarcode]).price;
 
-	for (var barcodeIndex in barcodeOfPromotions) {
-		if (barcodeOfPromotions[barcodeIndex] == itemBarcode && itemCount[itemBarcode] > 2) {
+	for (var itemBarcodeSample in barcodeOfPromotions) {
+		if (barcodeOfPromotions[itemBarcodeSample] == itemBarcode && itemCount[itemBarcode] > 2) {
 			promotedItems[itemBarcode] = 1;
 			saveMoney += nowItemPrice*promotedItems[itemBarcode];
 
