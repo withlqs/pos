@@ -39,19 +39,20 @@ function setSources(inputs) {
 function convertToStandardSources(inputs) {
 	var allItems = loadAllItems();
 	for (var item in allItems) {
-		standardItems[item.barcode] = {
-			name: item.name,
-			unit: item.unit,
-			price: item.price
+		var detailOfItem = { ;
+			name: allItems[item].name,
+			unit: allItems[item].unit,
+			price: allItems[item].price
 		};
+		standardItems[item.barcode] = detailOfItem;
 	}
 }
 
 function scanItems(inputs) {
 	var numberOfItem = "", barcodeOfItem = "";
 	for (var item in inputs) {
-		barcodeOfItem = item.split('-')[0];
-		numberOfItem = item.split('-')[1];
+		barcodeOfItem = inputs[item].split('-')[0];
+		numberOfItem = inputs[item].split('-')[1];
 
 		itemCount[barcodeOfItem] = 1;
 		if (numberOfItem !== "") {
@@ -76,18 +77,19 @@ function printMainBill() {
 function getSumMoney(itemCode) {
 	var allPromotions = loadPromotions();
 	for (var promotion in allPromotions) {
-		switch (promotion.type) {
-			case "BUY_TWO_GET_ONE_FREE": return BUY_TWO_GET_ONE_FREE(promotion.barcode, itemCode);
+		switch (allPromotions[promotion].type) {
+			case "BUY_TWO_GET_ONE_FREE": return BUY_TWO_GET_ONE_FREE(allPromotions[promotion].barcode, itemCode);
 		}
 	}
-	return itemCount[itemCode]*standardItems[itemCode]["price"];
+	return itemCount[itemCode]*(standardItems[itemCode].price);
 }
 
 function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemCode) {
-	var nowItemCount = itemCount[itemCode], nowItemPrice = standardItems[itemCode].price;
+	var nowItemCount = itemCount[itemCode];
+	var nowItemPrice = (standardItems[itemCode]).price;
 
 	for (var itemCodeSample in barcodeOfPromotions) {
-		if (itemCodeSample === itemCode && itemCount[itemCode] > 2) {
+		if (barcodeOfPromotions[itemCodeSample] === itemCode && itemCount[itemCode] > 2) {
 			promotedItems[itemCode] = 1;
 			saveMoney += nowItemPrice*promotedItems[itemCode];
 
