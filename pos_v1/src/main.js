@@ -56,7 +56,7 @@ function scanItems(inputs) {
 		itemBarcode = inputs[itemIndex].split('-')[0];
 		itemNumberInString = inputs[itemIndex].split('-')[1];
 		itemNumber = 1;
-		
+
 		if (itemNumberInString != null) {
 			itemNumber = parseInt(itemNumberInString);
 		}
@@ -73,7 +73,6 @@ function printMainBill() {
 	for (var itemBarcode in itemCount) {
 		moneyOfItem = getSumMoney(itemBarcode);
 		totalMoney += moneyOfItem;
-
 		outputText += "名称：" + standardItems[itemBarcode].name + "，数量：" + itemCount[itemBarcode] +
 					  standardItems[itemBarcode].unit + "，单价：" + standardItems[itemBarcode].price.toFixed(2) +
 					  "(" + moneyUnit + ")，小计：" + moneyOfItem.toFixed(2) + "(" + moneyUnit + ")\n";
@@ -82,9 +81,12 @@ function printMainBill() {
 
 function getSumMoney(itemBarcode) {
 	var allPromotions = loadPromotions();
+
 	for (var promotionIndex in allPromotions) {
 		switch (allPromotions[promotionIndex].type) {
-			case "BUY_TWO_GET_ONE_FREE": return BUY_TWO_GET_ONE_FREE(allPromotions[promotionIndex].barcodes, itemBarcode);
+			case "BUY_TWO_GET_ONE_FREE": {
+				return BUY_TWO_GET_ONE_FREE(allPromotions[promotionIndex].barcodes, itemBarcode);
+			}
 		}
 	}
 	return itemCount[itemBarcode]*(standardItems[itemBarcode].price);
