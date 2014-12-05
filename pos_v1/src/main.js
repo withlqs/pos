@@ -2,11 +2,11 @@ var outputText = "";
 var itemCount = {}, promotedItems = {}, standardItems = {};
 var totalMoney = 0, saveMoney = 0;
 var listSeperator = "----------------------\n",
-	endMark = "**********************",
-	marketName = "没钱赚商店",
-	promotionSentence = "挥泪赠送商品：\n",
-	billHeader = "***<"+marketName+">购物清单***\n",
-	moneyUnit = "元";
+    endMark = "**********************",
+    marketName = "没钱赚商店",
+    promotionSentence = "挥泪赠送商品：\n",
+    billHeader = "***<"+marketName+">购物清单***\n",
+    moneyUnit = "元";
 
 function printInventory(inputs) {
 	convertToStandardSources(inputs);
@@ -57,9 +57,9 @@ function printMainBill() {
 	for (var itemBarcode in itemCount) {
 		itemMoney = getSumMoney(itemBarcode);
 		totalMoney += itemMoney;
-		outputText += "名称：" + standardItems[itemBarcode].name + "，数量：" + itemCount[itemBarcode] +
-					  standardItems[itemBarcode].unit + "，单价：" + standardItems[itemBarcode].price.toFixed(2) +
-					  "(" + moneyUnit + ")，小计：" + itemMoney.toFixed(2) + "(" + moneyUnit + ")\n";
+		outputText += "名称：" + standardItems[itemBarcode].name + "，数量：" + itemCount[itemBarcode] + 
+			standardItems[itemBarcode].unit + "，单价：" + standardItems[itemBarcode].price.toFixed(2) + 
+			"(" + moneyUnit + ")，小计：" + itemMoney.toFixed(2) + "(" + moneyUnit + ")\n";
 	}
 }
 
@@ -94,7 +94,7 @@ function printPromotion() {
 	outputText += promotionSentence;
 	for (var itemBarcode in promotedItems) {
 		outputText += "名称：" + standardItems[itemBarcode].name + "，数量：" +
-					  promotedItems[itemBarcode] + standardItems[itemBarcode].unit + "\n";
+			promotedItems[itemBarcode] + standardItems[itemBarcode].unit + "\n";
 	}
 }
 
