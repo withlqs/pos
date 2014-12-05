@@ -76,7 +76,7 @@ function getSumMoney(itemBarcode) {
 	return itemCount[itemBarcode]*(standardItems[itemBarcode].price);
 }
 
-function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemBarcode) {
+function BUY_TWO_GET_ONE_FREE(barcodeOfPromotions, itemBarcode) { // one promotion, one function
 	var nowItemCount = itemCount[itemBarcode];
 	var nowItemPrice = (standardItems[itemBarcode]).price;
 
