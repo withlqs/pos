@@ -19,7 +19,7 @@ function printInventory(inputs) {
 	printTotalCount();
 	outputText += endMark;
 
-    console.log(outputText);
+	console.log(outputText);
 }
 
 function convertToStandardSources(inputs) {
